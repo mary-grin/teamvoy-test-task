@@ -16,7 +16,8 @@ export interface IPokemonInfo {
     base_experience: number,
     height: number,
     weight: number,
-    moves: IPokemonMoves[]
+    moves: IPokemonMoves[],
+    stats: IStat[]
 }
 
 export interface IPokemonMoves {
@@ -40,4 +41,9 @@ export interface ITypes {
 
 export interface ITypesPokemon {
     pokemon: IPokemon
+}
+
+export interface IStat {
+    base_stat: number,
+    stat: {name: string}
 }
