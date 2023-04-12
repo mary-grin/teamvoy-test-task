@@ -1,9 +1,10 @@
 import {FC, useEffect, useState} from "react";
 
+import styled from "styled-components";
+
+import {transformPokemonData} from "../api/api";
 import {IPokemon, IPokemonTransform} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
-import styled from "styled-components";
-import {transformPokemonData} from "../api/api";
 import Spinner from "./Spinner";
 
 interface PokemonsProps {

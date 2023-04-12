@@ -1,13 +1,16 @@
+import {useEffect, useState} from "react";
+
+import styled from "styled-components";
+
 import './App.css'
+
 import Header from "./components/Header";
 import Pokemons from "./components/Pokemons";
-import {useEffect, useState} from "react";
-import {IPokemon, IPokemonTransform} from "./interfaces/pokemon.interface";
 import Spinner from "./components/Spinner";
-import styled from "styled-components";
 import PokemonContext from "./context/PokemonContext";
 import PokemonInfo from "./components/PokemonInfo";
-import Pokemon from "./components/Pokemon";
+import {IPokemon, IPokemonTransform} from "./interfaces/pokemon.interface";
+
 
 function App() {
     const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/?&limit=12')
@@ -23,6 +26,8 @@ function App() {
     }
 
     useEffect(() => {
+        setIsDisabled(true)
+        setLoading(true)
         getPokemons(url)
     }, [])
 

@@ -1,13 +1,12 @@
 import {FC, useContext} from "react";
 
 import styled from "styled-components";
-import PokemonContext from "../context/PokemonContext";
+
 import defaultImg from "../assets/default-image.png"
+import PokemonContext from "../context/PokemonContext";
 
-interface PokemonInfoProps {
-}
 
-const PokemonInfo: FC<PokemonInfoProps> = ({}) => {
+const PokemonInfo: FC = () => {
     const { selectedPokemon } = useContext(PokemonContext);
     if(!selectedPokemon) {
         return (

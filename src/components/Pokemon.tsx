@@ -1,9 +1,11 @@
 import {FC, useContext} from "react";
 
 import styled from "styled-components";
-import {IPokemonTransform} from "../interfaces/pokemon.interface";
-import defaultImg from "../assets/default-image.png"
+
 import "../styles/Pokemon.types.css"
+
+import defaultImg from "../assets/default-image.png"
+import {IPokemonTransform} from "../interfaces/pokemon.interface";
 import PokemonContext from "../context/PokemonContext";
 
 interface PokemonProps {
