@@ -4,6 +4,7 @@ import {IPokemon, IPokemonTransform} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
 import styled from "styled-components";
 import {transformPokemonData} from "../api/api";
+import Spinner from "./Spinner";
 
 interface PokemonsProps {
     pokemon: IPokemon[],
@@ -16,15 +17,17 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
     const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
+        setLoading(true)
         pokemon.map(item => {
             const doesExist = pok.find(elem => elem.name === item.name)
             if(doesExist) return
             getPokemon(item.url)
         })
+        setLoading(false)
+
     }, [pokemon])
 
     const getPokemon = (url: string) => {
-        setLoading(true)
         fetch(url)
             .then(res => res.json())
             .then(data => setPokemon(state => {
@@ -32,13 +35,12 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
                 return [...state, transformPokemonData(data)]
             }))
             .catch(err => setError(err))
-            .finally(() => setLoading(false))
     }
 
     const Content = () => {
         return (
             <PokemonsWrapper>
-                {pok.map(el => <Pokemon key={el.name} pok={el} loading={loading} error={err}/>)}
+                {pok.map(el => <Pokemon key={el.name} pok={el} error={err}/>)}
             </PokemonsWrapper>
         )
     }
@@ -46,6 +48,7 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
     return (
         <>
             {pokemon.length ? <Content/> : null}
+            {loading && <Spinner/>}
             {error && <p>Something went wrong :( Try again</p>}
         </>
     )

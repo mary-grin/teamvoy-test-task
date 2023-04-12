@@ -1,25 +1,25 @@
-import {FC, useEffect, useMemo, useState} from "react";
+import {FC, useContext} from "react";
 
 import styled from "styled-components";
-import {IPokemon, IPokemonInfo, IPokemonTransform} from "../interfaces/pokemon.interface";
-import useFetch from "../hooks/useFetch";
-import {transformPokemonData} from "../api/api";
+import {IPokemonTransform} from "../interfaces/pokemon.interface";
 import defaultImg from "../assets/default-image.png"
 import "../styles/Pokemon.types.css"
 import Spinner from "./Spinner";
+import PokemonContext from "../context/PokemonContext";
 
 interface PokemonProps {
     pok: IPokemonTransform,
-    loading: boolean,
     error: Error | null
 }
 
-const Pokemon: FC<PokemonProps> = ({pok, loading, error}) => {
+const Pokemon: FC<PokemonProps> = ({pok, error}) => {
+    const { onSelectPokemon } = useContext(PokemonContext);
+
     return (
-        <PokemonWrapper>
+        <PokemonWrapper onClick={() => onSelectPokemon(pok)}>
             {pok &&
                 <>
-                    <img src={pok.img || defaultImg}/>
+                    <img src={pok.img || defaultImg} alt={"Image of pokemon " + pok.name}/>
                     <p>{pok.name}</p>
                     <TypeWrapper>
                         {pok.types.map(type =>
@@ -28,7 +28,6 @@ const Pokemon: FC<PokemonProps> = ({pok, loading, error}) => {
                     </TypeWrapper>
                 </>
             }
-            {loading && <Spinner/>}
             {error && <p>Something went wrong :(</p>}
         </PokemonWrapper>
 

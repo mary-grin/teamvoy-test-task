@@ -2,9 +2,11 @@ import './App.css'
 import Header from "./components/Header";
 import Pokemons from "./components/Pokemons";
 import {useEffect, useState} from "react";
-import {IPokemon} from "./interfaces/pokemon.interface";
+import {IPokemon, IPokemonTransform} from "./interfaces/pokemon.interface";
 import Spinner from "./components/Spinner";
 import styled from "styled-components";
+import PokemonContext from "./context/PokemonContext";
+import PokemonInfo from "./components/PokemonInfo";
 
 function App() {
     const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/?&limit=12')
@@ -12,9 +14,19 @@ function App() {
     const [error, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
 
+    const [selectedPokemon, setSelectedPokemon] = useState<IPokemonTransform | null>(null)
+
+    const onSelectPokemon = (pokemon: IPokemonTransform) => {
+        setSelectedPokemon(pokemon)
+    }
+
     useEffect(() => {
         getPokemons(url)
     }, [])
+
+    const onLoadMore = () => {
+        getPokemons(url)
+    }
 
     const getPokemons = (url: string): void => {
         setLoading(true)
@@ -31,22 +43,23 @@ function App() {
             .finally(() => setLoading(false))
     }
 
-    const onLoadMore = () => {
-        getPokemons(url)
-    }
-
     return (
-    <>
-        <Header/>
-        <main>
-            <Wrapper>
-                <Pokemons pokemon={pokemon} error={error}/>
-                <Button onClick={() => onLoadMore()}>{loading ? <Spinner/> : 'Load More'}</Button>
-            </Wrapper>
-        </main>
-    </>
+        <PokemonContext.Provider value={{selectedPokemon, onSelectPokemon}}>
+            <Header/>
+            <Main>
+                <Wrapper>
+                    <Pokemons pokemon={pokemon} error={error}/>
+                    <Button onClick={() => onLoadMore()}>{loading ? <Spinner/> : 'Load More'}</Button>
+                </Wrapper>
+                <PokemonInfo/>
+            </Main>
+        </PokemonContext.Provider>
     )
 }
+
+const Main = styled.main`
+  display: flex;
+`
 
 const Wrapper = styled.div`
   width: 50%;
