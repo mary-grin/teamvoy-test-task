@@ -6,6 +6,7 @@ import useFetch from "../hooks/useFetch";
 import {transformPokemonData} from "../api/api";
 import defaultImg from "../assets/default-image.png"
 import "./Pokemon.types.css"
+import Spinner from "./Spinner";
 
 interface PokemonProps {
     pokemon: IPokemon
@@ -27,9 +28,14 @@ const Pokemon: FC<PokemonProps> = ({pokemon}) => {
                 <>
                     <img src={pok.img || defaultImg}/>
                     <p>{pok.name}</p>
-                    <TypeWrapper>{pok.types.map(type => <p className={type.name + " type"}>{type.name}</p>)}</TypeWrapper>
+                    <TypeWrapper>
+                        {pok.types.map(type =>
+                            <p className={type.name + " type"} key={type.name}>{type.name}</p>
+                        )}
+                    </TypeWrapper>
                 </>
             }
+            {loading && <Spinner/>}
             {error && <p>Something went wrong :(</p>}
         </PokemonWrapper>
 

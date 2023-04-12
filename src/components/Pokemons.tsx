@@ -4,6 +4,7 @@ import useFetch from "../hooks/useFetch";
 import {IPokemon, IPokemonResponse} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
 import styled from "styled-components";
+import Spinner from "./Spinner";
 
 interface PokemonsProps {
 
@@ -24,29 +25,62 @@ const Pokemons: FC<PokemonsProps> = ({}) => {
         }
     }, [data])
 
-    function click() {
+    function onLoadMore() {
         if(data) {
             setUrl(data.next)
         }
     }
 
-    return (
-        <div>
-            {pokemon &&
+    const Content = () => {
+        return (
+            <>
                 <PokemonsWrapper>
                     {pokemon.map(el => <Pokemon key={el.name} pokemon={el}/>)}
                 </PokemonsWrapper>
-            }
-            <button onClick={() => click()}>Load More</button>
-        </div>
+                <Button onClick={() => onLoadMore()}>{loading ? <Spinner/> : 'Load More'}</Button>
+            </>
+        )
+    }
+
+    return (
+        <Wrapper>
+            {pokemon.length ? <Content/> : null}
+            {error && <p>Something went wrong :( Try again</p>}
+        </Wrapper>
     )
 }
 
+const Wrapper = styled.div`
+  width: 50%;
+`
+
 const PokemonsWrapper = styled.div`
   display: flex;
-  width: 50%;
+  width: 100%;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
+`
+
+const Button = styled.button`
+  display: block;
+  margin: 30px auto;
+  width: 250px;
+  height: 50px;
+  background-color: #8d2fff;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+
+  :hover {
+    background-color: #b87dff;
+  }
+
+  @media (max-width: 768px) {
+    width: 180px;
+  }
 `
 
 export default Pokemons;
