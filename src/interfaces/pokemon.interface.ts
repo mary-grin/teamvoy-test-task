@@ -20,6 +20,20 @@ export interface IPokemonInfo {
     stats: IStat[]
 }
 
+export interface IPokemonTransform {
+    img: string,
+    name: string,
+    types: { name: string }[],
+    hp: number,
+    attack: number,
+    defence: number
+    spAttack: number,
+    spDefence: number,
+    speed: number,
+    weight: number,
+    totalMoves: number
+}
+
 export interface IPokemonMoves {
     move: {name: string, url: string}
 }

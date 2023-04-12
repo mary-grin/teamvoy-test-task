@@ -9,7 +9,7 @@ interface State<T> {
 function useFetch <T>(url: string): State<T> {
     const [data, setData] = useState<T>();
     const [error, setError] = useState<Error | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setLoading(true);
