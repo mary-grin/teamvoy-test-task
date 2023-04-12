@@ -3,6 +3,7 @@ import {FC, useEffect, useState} from "react";
 import useFetch from "../hooks/useFetch";
 import {IPokemon, IPokemonResponse} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
+import styled from "styled-components";
 
 interface PokemonsProps {
 
@@ -30,11 +31,22 @@ const Pokemons: FC<PokemonsProps> = ({}) => {
     }
 
     return (
-        <>
-            {pokemon && <div>{pokemon.map(el => <Pokemon key={el.name} pokemon={el}/>)}</div>}
+        <div>
+            {pokemon &&
+                <PokemonsWrapper>
+                    {pokemon.map(el => <Pokemon key={el.name} pokemon={el}/>)}
+                </PokemonsWrapper>
+            }
             <button onClick={() => click()}>Load More</button>
-        </>
+        </div>
     )
 }
+
+const PokemonsWrapper = styled.div`
+  display: flex;
+  width: 50%;
+  flex-wrap: wrap;
+  gap: 20px;
+`
 
 export default Pokemons;
