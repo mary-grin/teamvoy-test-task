@@ -7,12 +7,14 @@ import Spinner from "./components/Spinner";
 import styled from "styled-components";
 import PokemonContext from "./context/PokemonContext";
 import PokemonInfo from "./components/PokemonInfo";
+import Pokemon from "./components/Pokemon";
 
 function App() {
     const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/?&limit=12')
     const [pokemon, setPokemon] = useState<IPokemon[]>([])
     const [error, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const [isDisabled, setIsDisabled] = useState<boolean>(false)
 
     const [selectedPokemon, setSelectedPokemon] = useState<IPokemonTransform | null>(null)
 
@@ -25,11 +27,17 @@ function App() {
     }, [])
 
     const onLoadMore = () => {
+        setIsDisabled(true)
+        setLoading(true)
         getPokemons(url)
     }
 
+    const onFinishFetch = () => {
+        setLoading(false)
+        setIsDisabled(false)
+    }
+
     const getPokemons = (url: string): void => {
-        setLoading(true)
         fetch(url)
             .then(res => res.json())
             .then(data => {
@@ -40,18 +48,23 @@ function App() {
                 setUrl(data.next)
             })
             .catch(err => setError(err))
-            .finally(() => setLoading(false))
     }
 
     return (
         <PokemonContext.Provider value={{selectedPokemon, onSelectPokemon}}>
             <Header/>
             <Main>
+                <PokemonList>
+                    <Pokemons pokemon={pokemon} error={error} onFinishFetch={onFinishFetch}/>
+                    <Button
+                        disabled={isDisabled}
+                        onClick={onLoadMore}>
+                        {loading ? <Spinner/> : 'Load More'}
+                    </Button>
+                </PokemonList>
                 <Wrapper>
-                    <Pokemons pokemon={pokemon} error={error}/>
-                    <Button onClick={() => onLoadMore()}>{loading ? <Spinner/> : 'Load More'}</Button>
+                    <PokemonInfo/>
                 </Wrapper>
-                <PokemonInfo/>
             </Main>
         </PokemonContext.Provider>
     )
@@ -61,8 +74,15 @@ const Main = styled.main`
   display: flex;
 `
 
-const Wrapper = styled.div`
+const PokemonList = styled.div`
   width: 50%;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  position: relative;
 `
 
 const Button = styled.button`

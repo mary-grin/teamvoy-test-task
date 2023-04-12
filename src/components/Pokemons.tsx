@@ -8,10 +8,11 @@ import Spinner from "./Spinner";
 
 interface PokemonsProps {
     pokemon: IPokemon[],
-    error: Error | null
+    error: Error | null,
+    onFinishFetch: () => void
 }
 
-const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
+const Pokemons: FC<PokemonsProps> = ({pokemon, error, onFinishFetch}) => {
     const [pok, setPokemon] = useState<IPokemonTransform[]>([])
     const [err, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -24,7 +25,7 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
             getPokemon(item.url)
         })
         setLoading(false)
-
+        onFinishFetch()
     }, [pokemon])
 
     const getPokemon = (url: string) => {

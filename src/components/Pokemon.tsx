@@ -4,7 +4,6 @@ import styled from "styled-components";
 import {IPokemonTransform} from "../interfaces/pokemon.interface";
 import defaultImg from "../assets/default-image.png"
 import "../styles/Pokemon.types.css"
-import Spinner from "./Spinner";
 import PokemonContext from "../context/PokemonContext";
 
 interface PokemonProps {
@@ -59,6 +58,12 @@ const PokemonWrapper = styled.div`
     color: white;
     padding: 3px;
     border-radius: 7px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 10px;
+    font-size: 14px;
+    width: 120px;
   }
 `
 
