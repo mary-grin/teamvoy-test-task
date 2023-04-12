@@ -1,8 +1,6 @@
 import {IPokemonInfo, IPokemonTransform} from "../interfaces/pokemon.interface";
 
-export const transformPokemonData = (pokemon: IPokemonInfo | undefined) :IPokemonTransform | null => {
-
-    if(!pokemon) return null;
+export const transformPokemonData = (pokemon: IPokemonInfo) :IPokemonTransform => {
 
     return {
         img: pokemon.sprites.front_default,

@@ -1,58 +1,55 @@
 import {FC, useEffect, useState} from "react";
 
-import useFetch from "../hooks/useFetch";
-import {IPokemon, IPokemonResponse} from "../interfaces/pokemon.interface";
+import {IPokemon, IPokemonTransform} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
 import styled from "styled-components";
-import Spinner from "./Spinner";
+import {transformPokemonData} from "../api/api";
 
 interface PokemonsProps {
-
+    pokemon: IPokemon[],
+    error: Error | null
 }
 
-const Pokemons: FC<PokemonsProps> = ({}) => {
-    const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/?&limit=12')
-    const [pokemon, setPokemon] = useState<IPokemon[]>([])
-
-    const {data, error, loading} = useFetch<IPokemonResponse>(url)
+const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
+    const [pok, setPokemon] = useState<IPokemonTransform[]>([])
+    const [err, setError] = useState<Error | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        if(data) {
-            setPokemon(state => {
-                if(JSON.stringify(state) === JSON.stringify(data.results)) return state
-                return [...state, ...data.results]
-            })
-        }
-    }, [data])
+        pokemon.map(item => {
+            const doesExist = pok.find(elem => elem.name === item.name)
+            if(doesExist) return
+            getPokemon(item.url)
+        })
+    }, [pokemon])
 
-    function onLoadMore() {
-        if(data) {
-            setUrl(data.next)
-        }
+    const getPokemon = (url: string) => {
+        setLoading(true)
+        fetch(url)
+            .then(res => res.json())
+            .then(data => setPokemon(state => {
+                if(JSON.stringify(data) === JSON.stringify(state)) return state
+                return [...state, transformPokemonData(data)]
+            }))
+            .catch(err => setError(err))
+            .finally(() => setLoading(false))
     }
 
     const Content = () => {
         return (
-            <>
-                <PokemonsWrapper>
-                    {pokemon.map(el => <Pokemon key={el.name} pokemon={el}/>)}
-                </PokemonsWrapper>
-                <Button onClick={() => onLoadMore()}>{loading ? <Spinner/> : 'Load More'}</Button>
-            </>
+            <PokemonsWrapper>
+                {pok.map(el => <Pokemon key={el.name} pok={el} loading={loading} error={err}/>)}
+            </PokemonsWrapper>
         )
     }
 
     return (
-        <Wrapper>
+        <>
             {pokemon.length ? <Content/> : null}
             {error && <p>Something went wrong :( Try again</p>}
-        </Wrapper>
+        </>
     )
 }
-
-const Wrapper = styled.div`
-  width: 50%;
-`
 
 const PokemonsWrapper = styled.div`
   display: flex;
@@ -60,27 +57,6 @@ const PokemonsWrapper = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   gap: 25px;
-`
-
-const Button = styled.button`
-  display: block;
-  margin: 30px auto;
-  width: 250px;
-  height: 50px;
-  background-color: #8d2fff;
-  color: white;
-  font-size: 18px;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-
-  :hover {
-    background-color: #b87dff;
-  }
-
-  @media (max-width: 768px) {
-    width: 180px;
-  }
 `
 
 export default Pokemons;

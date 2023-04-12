@@ -1,27 +1,20 @@
-import {FC, useEffect, useState} from "react";
+import {FC, useEffect, useMemo, useState} from "react";
 
 import styled from "styled-components";
 import {IPokemon, IPokemonInfo, IPokemonTransform} from "../interfaces/pokemon.interface";
 import useFetch from "../hooks/useFetch";
 import {transformPokemonData} from "../api/api";
 import defaultImg from "../assets/default-image.png"
-import "./Pokemon.types.css"
+import "../styles/Pokemon.types.css"
 import Spinner from "./Spinner";
 
 interface PokemonProps {
-    pokemon: IPokemon
+    pok: IPokemonTransform,
+    loading: boolean,
+    error: Error | null
 }
 
-const Pokemon: FC<PokemonProps> = ({pokemon}) => {
-    const {data, error, loading} = useFetch<IPokemonInfo>(pokemon.url);
-    const [pok, setPokemon] = useState<IPokemonTransform | null>()
-
-    useEffect(() => {
-        if(data) {
-            setPokemon(transformPokemonData(data))
-        }
-    }, [data])
-
+const Pokemon: FC<PokemonProps> = ({pok, loading, error}) => {
     return (
         <PokemonWrapper>
             {pok &&
