@@ -55,6 +55,7 @@ const PokemonWrapper = styled.div`
 
   img {
     width: 120px;
+    height: 120px;
   }
 
   .type {

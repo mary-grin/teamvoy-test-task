@@ -28,7 +28,7 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, loading, onFinishFetch, error}) =
 
     return (
         <div>
-            {pokemon.length ? <Content/> : null}
+            {pokemon.length ? <Content/> : <p>Sorry, nothing to show :( Choose another type</p>}
             {error && <p>Something went wrong :( Try again</p>}
         </div>
     )
