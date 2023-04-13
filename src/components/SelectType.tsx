@@ -1,5 +1,6 @@
 import {FC} from "react";
 import styled from "styled-components";
+import "../styles/Pokemon.types.css"
 
 interface SelectTypeProps {
     types: string[],
@@ -12,7 +13,7 @@ const SelectType: FC<SelectTypeProps> = ({types, onChange}) => {
             <label>Filter by type: </label>
             <select onChange={(e) => onChange(e.target.value)}>
                 <option value={"show all"}>show all</option>
-                {types.map(type => <option value={type} key={type}>{type}</option>)}
+                {types.map(type => <Option className={type} value={type} key={type}>{type}</Option>)}
             </select>
         </Wrapper>
 
@@ -31,6 +32,10 @@ const Wrapper = styled.div`
   @media (max-width: 768px) {
     font-size: 14px;
   }
+`
+
+const Option = styled.option`
+  color: white;
 `
 
 export default SelectType;
