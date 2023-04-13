@@ -30,6 +30,7 @@ function App() {
     const [selectedPokemon, setSelectedPokemon] = useState<IPokemonTransform | null>(null)
 
     const onSetFilter = (type: string) => {
+        setLoading(true)
         fetchPokemonByType(type)
             .catch(err => setError(err))
     }
