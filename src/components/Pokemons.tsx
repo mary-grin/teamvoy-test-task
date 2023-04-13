@@ -8,51 +8,50 @@ import Pokemon from "./Pokemon";
 import Spinner from "./Spinner";
 
 interface PokemonsProps {
-    pokemon: IPokemon[],
-    error: Error | null,
-    onFinishFetch: () => void
+    pokemon: IPokemonTransform[],
+    error: Error | null
 }
 
-const Pokemons: FC<PokemonsProps> = ({pokemon, error, onFinishFetch}) => {
-    const [pok, setPokemon] = useState<IPokemonTransform[]>([])
-    const [err, setError] = useState<Error | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
+const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
+    // const [pok, setPokemon] = useState<IPokemonTransform[]>([])
+    // const [err, setError] = useState<Error | null>(null)
+    // const [loading, setLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        setLoading(true)
-        pokemon.map(item => {
-            const doesExist = pok.find(elem => elem.name === item.name)
-            if(doesExist) return
-            getPokemon(item.url)
-        })
-        setLoading(false)
-        onFinishFetch()
-    }, [pokemon])
+    // useEffect(() => {
+    //     setLoading(true)
+    //     pokemon.map(item => {
+    //         const doesExist = pok.find(elem => elem.name === item.name)
+    //         if(doesExist) return
+    //         getPokemon(item.url)
+    //     })
+    //     setLoading(false)
+    //     onFinishFetch()
+    // }, [pokemon])
 
-    const getPokemon = (url: string) => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => setPokemon(state => {
-                if(JSON.stringify(data) === JSON.stringify(state)) return state
-                return [...state, transformPokemonData(data)]
-            }))
-            .catch(err => setError(err))
-    }
+    // const getPokemon = (url: string) => {
+    //     fetch(url)
+    //         .then(res => res.json())
+    //         .then(data => setPokemon(state => {
+    //             if(JSON.stringify(data) === JSON.stringify(state)) return state
+    //             return [...state, transformPokemonData(data)]
+    //         }))
+    //         .catch(err => setError(err))
+    // }
 
     const Content = () => {
         return (
             <PokemonsWrapper>
-                {pok.map(el => <Pokemon key={el.name} pok={el} error={err}/>)}
+                {pokemon.map(el => <Pokemon key={el.name} pok={el} /*error={err}*//>)}
             </PokemonsWrapper>
         )
     }
 
     return (
-        <>
+        <div>
             {pokemon.length ? <Content/> : null}
-            {loading && <Spinner/>}
+            {/*{loading && <Spinner/>}*/}
             {error && <p>Something went wrong :( Try again</p>}
-        </>
+        </div>
     )
 }
 
@@ -63,5 +62,6 @@ const PokemonsWrapper = styled.div`
   flex-wrap: wrap;
   gap: 25px;
 `
+
 
 export default Pokemons;

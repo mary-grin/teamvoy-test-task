@@ -1,5 +1,9 @@
 import {IPokemonInfo, IPokemonTransform} from "../interfaces/pokemon.interface";
 
+export const _baseApi = 'https://pokeapi.co/api/v2';
+export const _firstRequestApi = `${_baseApi}/pokemon/?&limit=12`
+export const _typeApi = `${_baseApi}/type/`
+
 export const transformPokemonData = (pokemon: IPokemonInfo) :IPokemonTransform => {
 
     return {

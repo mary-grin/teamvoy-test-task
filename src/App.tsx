@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 import styled from "styled-components";
 
@@ -9,50 +9,33 @@ import Pokemons from "./components/Pokemons";
 import Spinner from "./components/Spinner";
 import PokemonContext from "./context/PokemonContext";
 import PokemonInfo from "./components/PokemonInfo";
-import {IPokemon, IPokemonTransform} from "./interfaces/pokemon.interface";
+import {IPokemonTransform} from "./interfaces/pokemon.interface";
+import SelectType from "./components/SelectType";
+import {usePokemon} from "./usePokemon";
 
 
 function App() {
-    const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon/?&limit=12')
-    const [pokemon, setPokemon] = useState<IPokemon[]>([])
-    const [error, setError] = useState<Error | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [isDisabled, setIsDisabled] = useState<boolean>(false)
+    const {
+        pokemon,
+        loading,
+        isHidden,
+        setLoading,
+        fetchPokemon,
+        fetchPokemonByType
+    } = usePokemon()
 
     const [selectedPokemon, setSelectedPokemon] = useState<IPokemonTransform | null>(null)
+
+    const onSetFilter = (type: string) => {
+        fetchPokemonByType(type).then()
+    }
 
     const onSelectPokemon = (pokemon: IPokemonTransform) => {
         setSelectedPokemon(pokemon)
     }
 
-    useEffect(() => {
-        setIsDisabled(true)
-        setLoading(true)
-        getPokemons(url)
-    }, [])
-
     const onLoadMore = () => {
-        setIsDisabled(true)
-        setLoading(true)
-        getPokemons(url)
-    }
-
-    const onFinishFetch = () => {
-        setLoading(false)
-        setIsDisabled(false)
-    }
-
-    const getPokemons = (url: string): void => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                setPokemon(state => {
-                    if(JSON.stringify(state) === JSON.stringify(data.results)) return state
-                    return [...state, ...data.results]
-                })
-                setUrl(data.next)
-            })
-            .catch(err => setError(err))
+        fetchPokemon().then(() => setLoading(false))
     }
 
     return (
@@ -60,12 +43,13 @@ function App() {
             <Header/>
             <Main>
                 <PokemonList>
-                    <Pokemons pokemon={pokemon} error={error} onFinishFetch={onFinishFetch}/>
-                    <Button
-                        disabled={isDisabled}
+                    <SelectType onChange={onSetFilter}/>
+                    <Pokemons pokemon={pokemon} error={null}/>
+                    {isHidden ? null : <Button
+                        disabled={loading}
                         onClick={onLoadMore}>
                         {loading ? <Spinner/> : 'Load More'}
-                    </Button>
+                    </Button>}
                 </PokemonList>
                 <Wrapper>
                     <PokemonInfo/>
