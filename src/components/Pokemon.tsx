@@ -10,10 +10,10 @@ import PokemonContext from "../context/PokemonContext";
 
 interface PokemonProps {
     pok: IPokemonTransform,
-    // error: Error | null
+    loading: boolean
 }
 
-const Pokemon: FC<PokemonProps> = ({pok}) => {
+const Pokemon: FC<PokemonProps> = ({pok, loading}) => {
     const { onSelectPokemon } = useContext(PokemonContext);
 
     return (
@@ -30,6 +30,7 @@ const Pokemon: FC<PokemonProps> = ({pok}) => {
                 </>
             }
             {/*{error && <p>Something went wrong :(</p>}*/}
+            {}
         </PokemonWrapper>
 
     )

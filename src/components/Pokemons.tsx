@@ -1,47 +1,27 @@
-import {FC, useEffect, useState} from "react";
+import {FC, useEffect} from "react";
 
 import styled from "styled-components";
 
-import {transformPokemonData} from "../api/api";
-import {IPokemon, IPokemonTransform} from "../interfaces/pokemon.interface";
+import {IPokemonTransform} from "../interfaces/pokemon.interface";
 import Pokemon from "./Pokemon";
-import Spinner from "./Spinner";
 
 interface PokemonsProps {
     pokemon: IPokemonTransform[],
+    loading: boolean,
+    onFinishFetch: () => void,
     error: Error | null
 }
 
-const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
-    // const [pok, setPokemon] = useState<IPokemonTransform[]>([])
-    // const [err, setError] = useState<Error | null>(null)
-    // const [loading, setLoading] = useState<boolean>(false)
+const Pokemons: FC<PokemonsProps> = ({pokemon, loading, onFinishFetch, error}) => {
 
-    // useEffect(() => {
-    //     setLoading(true)
-    //     pokemon.map(item => {
-    //         const doesExist = pok.find(elem => elem.name === item.name)
-    //         if(doesExist) return
-    //         getPokemon(item.url)
-    //     })
-    //     setLoading(false)
-    //     onFinishFetch()
-    // }, [pokemon])
-
-    // const getPokemon = (url: string) => {
-    //     fetch(url)
-    //         .then(res => res.json())
-    //         .then(data => setPokemon(state => {
-    //             if(JSON.stringify(data) === JSON.stringify(state)) return state
-    //             return [...state, transformPokemonData(data)]
-    //         }))
-    //         .catch(err => setError(err))
-    // }
+    useEffect(() => {
+        if(pokemon.length) onFinishFetch()
+    }, [pokemon])
 
     const Content = () => {
         return (
             <PokemonsWrapper>
-                {pokemon.map(el => <Pokemon key={el.name} pok={el} /*error={err}*//>)}
+                {pokemon.map(el => <Pokemon loading={loading} key={el.name} pok={el}/>)}
             </PokemonsWrapper>
         )
     }
@@ -49,7 +29,6 @@ const Pokemons: FC<PokemonsProps> = ({pokemon, error}) => {
     return (
         <div>
             {pokemon.length ? <Content/> : null}
-            {/*{loading && <Spinner/>}*/}
             {error && <p>Something went wrong :( Try again</p>}
         </div>
     )

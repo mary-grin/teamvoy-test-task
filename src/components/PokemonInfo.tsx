@@ -5,7 +5,6 @@ import styled from "styled-components";
 import defaultImg from "../assets/default-image.png"
 import PokemonContext from "../context/PokemonContext";
 
-
 const PokemonInfo: FC = () => {
     const { selectedPokemon } = useContext(PokemonContext);
     if(!selectedPokemon) {

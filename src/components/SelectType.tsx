@@ -1,38 +1,36 @@
-import {FC, useEffect, useState} from "react";
-
-import {IPokemon} from "../interfaces/pokemon.interface";
+import {FC} from "react";
+import styled from "styled-components";
 
 interface SelectTypeProps {
+    types: string[],
     onChange: (type: string) => void
 }
 
-const SelectType: FC<SelectTypeProps> = ({onChange}) => {
-    const [types, setTypes] = useState<string[]>([])
-
-    useEffect(() => {
-        getPokemonTypes('https://pokeapi.co/api/v2/type')
-    }, [])
-
-    const getPokemonTypes = (url: string): void => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                data.results.map((type: IPokemon) => {
-                    setTypes((state => {
-                        const isExist = state.find(el => type.name === el)
-                        if(isExist) return state
-                        return [...state, type.name]
-                    }))
-                })
-            })
-    }
-
+const SelectType: FC<SelectTypeProps> = ({types, onChange}) => {
     return (
-        <select onChange={(e) => onChange(e.target.value)}>
-            <option value={"show all"}>show all</option>
-            {types.map(type => <option value={type} key={type}>{type}</option>)}
-        </select>
+        <Wrapper>
+            <label>Filter by type: </label>
+            <select onChange={(e) => onChange(e.target.value)}>
+                <option value={"show all"}>show all</option>
+                {types.map(type => <option value={type} key={type}>{type}</option>)}
+            </select>
+        </Wrapper>
+
     )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 10px 0;
+  position: sticky;
+  top: 20px;
+  background-color: white;
+  padding: 5px;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`
 
 export default SelectType;

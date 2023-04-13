@@ -10,13 +10,16 @@ import {_firstRequestApi, _typeApi, transformPokemonData} from "./api/api";
 
 export const usePokemon = () => {
     const [pokemon, setPokemon] = useState<IPokemonTransform[]>([]);
+    const [types, setTypes] = useState<string[]>([]);
     const [nextUrl, setUrl] = useState<string | null>(_firstRequestApi);
     const [loading, setLoading] = useState<boolean>(false);
-    const [isHidden, setIsHidden] = useState<boolean>(false)
+    const [error, setError] = useState<Error | null>(null)
+    const [isHidden, setIsHidden] = useState<boolean>(false);
 
     useEffect(() => {
         setLoading(true)
-        fetchPokemon().then(() => setLoading(false))
+        fetchPokemon().catch(err => setError(err))
+        getPokemonTypes(_typeApi)
     }, [])
 
     const fetchPokemon = async () => {
@@ -39,7 +42,7 @@ export const usePokemon = () => {
             setUrl(_firstRequestApi)
         } else {
             setIsHidden(false)
-            fetchPokemon().then(() => setLoading(false))
+            fetchPokemon().catch(err => setError(err))
         }
     }
 
@@ -55,6 +58,30 @@ export const usePokemon = () => {
             })
     }
 
-    return {pokemon, loading, isHidden, setLoading, fetchPokemon, fetchPokemonByType}
+    const getPokemonTypes = (url: string): void => {
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                data.results.map((type: IPokemon) => {
+                    setTypes((state => {
+                        const isExist = state.find(el => type.name === el)
+                        if(isExist) return state
+                        return [...state, type.name]
+                    }))
+                })
+            })
+    }
+
+    return{
+        pokemon,
+        types,
+        loading,
+        setLoading,
+        error,
+        isHidden,
+        setError,
+        fetchPokemon,
+        fetchPokemonByType
+    }
 
 }

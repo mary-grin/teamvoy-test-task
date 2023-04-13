@@ -18,8 +18,11 @@ function App() {
     const {
         pokemon,
         loading,
+        types,
         isHidden,
+        error,
         setLoading,
+        setError,
         fetchPokemon,
         fetchPokemonByType
     } = usePokemon()
@@ -27,7 +30,8 @@ function App() {
     const [selectedPokemon, setSelectedPokemon] = useState<IPokemonTransform | null>(null)
 
     const onSetFilter = (type: string) => {
-        fetchPokemonByType(type).then()
+        fetchPokemonByType(type)
+            .catch(err => setError(err))
     }
 
     const onSelectPokemon = (pokemon: IPokemonTransform) => {
@@ -35,7 +39,13 @@ function App() {
     }
 
     const onLoadMore = () => {
-        fetchPokemon().then(() => setLoading(false))
+        setLoading(true)
+        fetchPokemon()
+            .catch(err => setError(err))
+    }
+
+    const onFinishFetch = () => {
+        setLoading(false)
     }
 
     return (
@@ -43,8 +53,8 @@ function App() {
             <Header/>
             <Main>
                 <PokemonList>
-                    <SelectType onChange={onSetFilter}/>
-                    <Pokemons pokemon={pokemon} error={null}/>
+                    <SelectType types={types} onChange={onSetFilter}/>
+                    <Pokemons pokemon={pokemon} loading={loading} error={error} onFinishFetch={onFinishFetch}/>
                     {isHidden ? null : <Button
                         disabled={loading}
                         onClick={onLoadMore}>
@@ -61,10 +71,15 @@ function App() {
 
 const Main = styled.main`
   display: flex;
+  margin: 20px 0;
 `
 
 const PokemonList = styled.div`
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 `
 
 const Wrapper = styled.div`
