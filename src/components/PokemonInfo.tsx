@@ -26,41 +26,26 @@ const PokemonInfo: FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Attack</td>
-                        <td>{selectedPokemon.attack}</td>
-                    </tr>
-                    <tr>
-                        <td>Defense</td>
-                        <td>{selectedPokemon.defence}</td>
-                    </tr>
-                    <tr>
-                        <td>HP</td>
-                        <td>{selectedPokemon.hp}</td>
-                    </tr>
-                    <tr>
-                        <td>SP Attack</td>
-                        <td>{selectedPokemon.spAttack}</td>
-                    </tr>
-                    <tr>
-                        <td>SP Defense</td>
-                        <td>{selectedPokemon.spDefence}</td>
-                    </tr>
-                    <tr>
-                        <td>Speed</td>
-                        <td>{selectedPokemon.speed}</td>
-                    </tr>
-                    <tr>
-                        <td>Weight</td>
-                        <td>{selectedPokemon.weight}</td>
-                    </tr>
-                    <tr>
-                        <td>Total moves</td>
-                        <td>{selectedPokemon.totalMoves}</td>
-                    </tr>
+                    <TableRow title="Attack" type={selectedPokemon.attack}/>
+                    <TableRow title="Defense" type={selectedPokemon.defence}/>
+                    <TableRow title="HP" type={selectedPokemon.hp}/>
+                    <TableRow title="SP Attack" type={selectedPokemon.spAttack}/>
+                    <TableRow title="SP Defense" type={selectedPokemon.spDefence}/>
+                    <TableRow title="Speed" type={selectedPokemon.speed}/>
+                    <TableRow title="Weight" type={selectedPokemon.weight}/>
+                    <TableRow title="Total moves" type={selectedPokemon.totalMoves}/>
                 </tbody>
             </Table>
         </Wrapper>
+    )
+}
+
+const TableRow: FC<{title: string, type: string | number}> = ({title, type}) => {
+    return (
+        <tr>
+            <td>{title}</td>
+            <td>{type}</td>
+        </tr>
     )
 }
 
